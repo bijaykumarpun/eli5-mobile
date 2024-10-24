@@ -9,11 +9,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { Conversation, Message } from "../type/converstaion";
 
 interface HomePageProp {
   isLoading: boolean;
   onPressSend: () => void;
+  onTextChanged: (text: string) => void;
+  inputText: string;
+  converstaion: Conversation;
 }
+
 const HomePage: React.FC<HomePageProp> = (prop: HomePageProp) => {
   return (
     <SafeAreaView
@@ -22,15 +27,18 @@ const HomePage: React.FC<HomePageProp> = (prop: HomePageProp) => {
     >
       <KeyboardAvoidingView style={styles.parentContainer}>
         <ScrollView style={styles.messageListContainer}>
-          {Array.from({ length: 1000 }, (_, i) => (
-            <Text key={i}>Item {i}</Text>
-          ))}
+          {prop.converstaion.messages.map((i: Message) => {
+            return <Text>{i.data}</Text>;
+          })}
         </ScrollView>
         <View style={styles.inputContainer}>
           <TextInput
             multiline={true}
             placeholder="Type a message"
             style={styles.inputField}
+            onChangeText={(text) => {
+              prop.onTextChanged(text);
+            }}
           ></TextInput>
           {prop.isLoading ? (
             <ActivityIndicator size={30} style={{ padding: 4 }} />
